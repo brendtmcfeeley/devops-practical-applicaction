@@ -1,0 +1,53 @@
+---
+
+- name: ec2 tasks
+  hosts: all
+  gather_facts: no
+
+  # required
+  # additionally available variables:
+  # {{ instance_ip }} - ec2 instance public ip
+  vars_files:
+    - ../terraform.tfvars.json
+
+  tasks:
+
+  - name: upload k3d images tarball
+    copy:
+      src: "{{ k3d_images_tarball }}"
+      dest: "~/k3d_images/{{ k3d_images_tarball | basename }}"
+    when: k3d_upload_images == true
+
+  - name: deploy k3d cluster
+    shell: |
+      k3d cluster create {{ k3d_cluster_name }} --wait -s {{ k3d_servers }} -a {{ k3d_agents }} \
+        -v $HOME/k3d_images:/var/lib/rancher/k3s/agent/images --k3s-arg "--tls-san={{ instance_ip }}@server:0" \
+        --api-port 0.0.0.0:{{ k3d_api_port }} {{ k3d_args }}
+
+  - name: create external kubeconfig file
+    shell: |
+      k3d kubeconfig merge {{ k3d_cluster_name }} -o ~/{{ k3d_cluster_name }}.yaml
+
+  - name: template external kubeconfig file server value
+    replace:
+      path: "~/{{ k3d_cluster_name }}.yaml"
+      regexp: (?<=server:\shttps:\/\/).*:\d+$
+      replace: "{{ instance_ip }}:{{ k3d_api_port }}"
+
+  - name: set external kubeconfig file permissions
+    file:
+      path: "~/{{ k3d_cluster_name }}.yaml"
+      mode: 0600
+
+  - name: download external kubeconfig file
+    fetch:
+      src: "~/{{ k3d_cluster_name }}.yaml"
+      dest: "{{ kubeconfig_path }}"
+      flat: true
+    when: download_kubeconfig == true
+
+  - name: wait for k3d nodes to be ready
+    script: "{{playbook_dir}}/scripts/re_run.sh 120 'kubectl wait --for=condition=Ready $(kubectl get no -o name) 2>/dev/null'"
+
+  - name: wait for k3d system pods to be ready
+    script: "{{playbook_dir}}/scripts/re_run.sh 120 'kubectl wait -n kube-system --for=condition=Ready $(kubectl get po -o name -n kube-system) 2>/dev/null'"

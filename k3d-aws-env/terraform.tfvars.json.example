@@ -1,0 +1,14 @@
+{
+    "private_key_path": "<home_full_path>/.ssh/id_rsa",
+    "public_key_path": "<home_full_path>/.ssh/id_rsa.pub",
+    "download_kubeconfig": true,
+    "kubeconfig_path": "<home_full_path>/.kube/config",
+    "k3d_cluster_name": "dev-env",
+    "k3d_args": "--k3s-arg \"--disable=traefik@server:0\" --k3s-arg \"--disable=metrics-server@server:0\" -p 80:80@loadbalancer -p 443:443@loadbalancer",
+    "k3d_servers": 1,
+    "k3d_agents": 3,
+    "k3d_api_port": 6550,
+    "k3d_upload_images": false,
+    "k3d_images_tarball": "<project_full_path>/hack/images.tar.gz",
+    "ansible_post_args": "-v"
+}
