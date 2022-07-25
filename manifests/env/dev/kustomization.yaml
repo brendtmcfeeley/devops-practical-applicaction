@@ -4,7 +4,21 @@ kind: Kustomization
 namespace: swimlane
 
 resources:
-- ../../base/
+  - ../../base/
+  - patches/mongodb-env.yaml
+
+# generators:
+#   - mongodb-helm.yaml
+# helmChartInflationGenerator:
+# - chartName: bitnami/mongodb
+#   chartRepoUrl: https://charts.bitnami.com/bitnami
+#   chartVersion: 5.0.9
+#   releaseName: mongodb
+#   releaseNamespace: swimlane
+
+
+patchesStrategicMerge:
+  - patches/node-app-patch.yaml
 
 images:
 - name: node-app

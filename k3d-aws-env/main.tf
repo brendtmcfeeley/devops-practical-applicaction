@@ -84,8 +84,6 @@ resource "aws_security_group_rule" "egress_client" {
   protocol          = "-1"
   security_group_id = aws_security_group.default.id
   cidr_blocks       = [format("%s/%s", data.external.client_info.result["ip"], 32)]
-  # optionally include this rule based on airgap variable
-  count = var.aws_airgap ? 1 : 0
 }
 
 # allow egress to all
@@ -96,8 +94,6 @@ resource "aws_security_group_rule" "egress_all" {
   protocol          = "-1"
   security_group_id = aws_security_group.default.id
   cidr_blocks       = ["0.0.0.0/0"]
-  # optionally include this rule based on airgap variable
-  count = var.aws_airgap ? 0 : 1
 }
 
 # aws key pair to create
