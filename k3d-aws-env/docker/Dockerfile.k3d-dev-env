@@ -1,0 +1,36 @@
+FROM alpine:3.13
+
+# hardcoded versions
+ARG PACKER_VERSION=1.6.6
+ARG TERRAFORM_VERSION=0.14.5
+
+# install packages
+RUN apk add --update \
+    git bash openssl ansible \
+    curl openssh openssh-keygen jq \
+    python3 py3-pip docker
+
+# python alias
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
+# install edge packages
+RUN apk add --update yq \
+    --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+
+# install awscli
+RUN pip install --upgrade awscli
+
+# install packer
+RUN curl -O https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
+    unzip packer_${PACKER_VERSION}_linux_amd64.zip -d /usr/local/bin && \
+    rm packer_${PACKER_VERSION}_linux_amd64.zip
+
+# install terraform
+RUN curl -O https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/local/bin && \
+    rm terraform_${TERRAFORM_VERSION}_linux_amd64.zip
+
+# install kubectl
+RUN curl -sLO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+RUN chmod +x ./kubectl
+RUN mv ./kubectl /usr/local/bin
