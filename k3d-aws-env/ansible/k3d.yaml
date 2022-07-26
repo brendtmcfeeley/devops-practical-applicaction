@@ -12,6 +12,13 @@
 
   tasks:
 
+  - name: install helm
+    shell: |
+      curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+      chmod 700 get_helm.sh
+      ./get_helm.sh
+      helm help
+
   - name: upload k3d images tarball
     copy:
       src: "{{ k3d_images_tarball }}"

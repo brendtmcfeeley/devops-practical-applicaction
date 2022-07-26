@@ -4,7 +4,9 @@ kind: Kustomization
 namespace: swimlane
 
 resources:
-- ../../base/
+  - ../../base/
+  - patches/node-app-patch.yaml
+  - patches/mongodb-env.yaml
 
 images:
 - name: node-app

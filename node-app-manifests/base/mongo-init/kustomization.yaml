@@ -4,9 +4,6 @@ kind: Kustomization
 namespace: swimlane
 
 resources:
-- ../../base/
-
-images:
-- name: node-app
-  newName: bentomcfeeley/swim-node
-  newTag: "0.1"
+  - mongodb-config.yaml
+  - mongodb-swim-user.yaml
+  - mongo-init.yaml

@@ -1,0 +1,14 @@
+# Normally this would not be sitting here in base64
+# We would use something like SOPS to encrypt this file and connect 
+# via AWS to decrypt the secrets in cluster only.
+
+# This is a working solution as SOPs would be overkill for this.
+
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: mongodb-secrets
+  namespace: swimlane
+data:
+  swim-user-pass: dGVzdA==
