@@ -100,3 +100,13 @@ kubectl apply -k env/dev
 ```
 
 Replace /dev as needed for different environments, but currently only dev is set up with the correct tag.
+
+## Using the application
+
+To use the application with k3d, simply portforward to so you can access it via your browser.
+
+```
+kubectl port-forward service/node-app 3000:3000 -n swimlane
+```
+
+Then open your browser and hit `localhost:3000`
