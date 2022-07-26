@@ -1,3 +1,6 @@
+# Dockerfile build via docker build . -t bentomcfeeley/node-app:0.1
+# Pushed to public docker registry
+
 FROM node
 
 # Only necessary if we're running this for the first or outside of CI/CD environment
