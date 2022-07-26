@@ -15,7 +15,7 @@ source "amazon-ebs" "default" {
   subnet_id             = "subnet-051f0a826bfe193e9"
   associate_public_ip_address = true
   encrypt_boot          = false
-  # Source packer AMI depends on what region your'e in
+  # Source packer AMI depends on what region you're in
   # Default AWS marketplace Ubuntu 20.04 x86 AMI
   source_ami            = "ami-01154c8b2e9a14885"
 

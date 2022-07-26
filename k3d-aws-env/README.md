@@ -14,22 +14,12 @@ Other systems may be used, but documentation is written for the following:
 Install the required packages (MacOS):
 
 ```
-brew install awscli terraform ansible kubectl
-```
-
-If you are planning on building the required k3d AMI
-
-```
-brew install packer
+brew install awscli terraform ansible kubectl packer
 ```
 
 ## AWS Configuration
 
 **Note**: You will need to obtain access to a supported AWS account and region to use this project.
-
-All required AWS resources are stored in the BigBang AWS account, and shared to several other supported accounts and regions.
-
-Using unlisted AWS accounts or regions is currently not supported.
 
 Configure your AWS credentials and region:
 * Make sure this region equals the `aws_region` variable.
@@ -73,15 +63,35 @@ This file must exist, and is the only tfvars file type allowed.
 
 This is due to limitations with passing terraform variables to ansible.
 
-# Running
+# Pre-req file changes
 
-Steps that will be done after application:
-* A security group will be created that only allows your IP ingress.
-* Your SSH key will be created and linked as a new AWS keypair.
-* An EC2 instance is spawned from the `k3d-dev-env` AMI.
-* A k3d cluster will be created according to set requirements.
-* (Optional) Your local kubeconfig file will be overwritten.
-* Output information will be populated for debugging use.
+Some AMIs are us-west-1 specific, please pay attention if you are in a separate AWS region!
+
+* packer/k3d-dev-env.hcl
+    - Line 3 : region          = "us-west-1"
+        - The region will need to change if you use another region
+    - Line 20 : ami-01154c8b2e9a14885
+        - This is the Ubuntu 20.04 AWS ami for us-west-1. Go to the AWS marketplace and grab the 20.04 AMI ID if you wish to change this
+* variables.tf
+    - Line 81 : default     = "us-west-1"
+        - This will need to change if you use another region
+    - Line 116 : default     = [""]
+        - This will be your AWS account id
+
+If you wish to use .envrc for environment control
+
+```
+cp .envrc.example .envrc
+direnv allow
+```
+
+# Packer
+
+If you want to build the k3d AMI image, follow the README in the `packer` directory
+
+**You will need to build the k3d image via packer if you want to deploy via AWS**
+
+# Running
 
 Plan the terraform module:
 
@@ -107,20 +117,12 @@ sed -i '' "s|0.0.0.0|$(terraform output -raw instance_ip)|g" config
 mv config ~/.kube/
 ```
 
-# Proxying
-
-Several methods of ingress proxying can be used, here is one example:
-
-```
-ssh -i $(terraform output -raw private_key_path) $(terraform output -raw ami_user)@$(terraform output -raw instance_ip)
-```
-
 # Verifying
 
 Check to see if your cluster is up and running:
 
 ```
-kubectl get nodes -o wide
+kubectl get nodes -A
 ```
 
 # Destroying
@@ -130,7 +132,3 @@ Please make sure to destroy your resources when not in use:
 ```
 terraform destroy --auto-approve
 ```
-
-# Packer
-
-If you want to build the k3d AMI image, follow the README in the `packer` directory
