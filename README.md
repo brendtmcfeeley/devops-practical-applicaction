@@ -47,7 +47,9 @@ That's it! Use `kubectl get nodes -A` to see your nodes running.
 
 We can install k3d on a EC2 instance so we can perform all k8s functions (with main and worker nodes) on a singular instance. This saves a lot of money and resources for development costs. Almost all work can be mimiced to an EKS solution.
 
-The main code is open-source of DoD Platform1. https://repo1.dso.mil/platform-one/big-bang/terraform-modules/k3d-dev-env although I have created my own fork of this and modified for personal use.
+The `k3d-aws-env` installs everything you need to deploy a TF instance. This includes, VPCs, appropriate CIDR blocks, subnets, IGWs, and security groups.
+
+The main code is open-source of DoD Platform1. https://repo1.dso.mil/platform-one/big-bang/terraform-modules/k3d-dev-env although I have created my own fork of this and modified it a bunch for personal use.
 
 There is more detailed documentation in the k3d-aws-env/ folder.
 
