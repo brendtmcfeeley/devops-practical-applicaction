@@ -1,0 +1,31 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongo-init
+  namespace: swimlane
+spec:
+  ttlSecondsAfterFinished: 30
+  template:
+    spec:
+      containers:
+      - name: mongo-init
+        image: docker.io/bitnami/mongodb:5.0.9-debian-11-r7
+        command: ['sh', '-c']
+        args:
+          - mongosh admin --host "mongodb" --authenticationDatabase admin -u root -p $MONGODB_PASS --eval "db.getSiblingDB('$MONGODB_DB').createUser({user:'$MONGODB_USER',pwd:'$SWIM_PASS',roles:[{role:'readWrite', db:'$MONGODB_DB'}]})"
+        env:
+            - name: MONGODB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb
+                  key: mongodb-root-password
+            - name: SWIM_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secrets
+                  key: swim-user-pass
+        envFrom:
+            - configMapRef:
+                name: mongodb-env
+      restartPolicy: Never
+  backoffLimit: 4

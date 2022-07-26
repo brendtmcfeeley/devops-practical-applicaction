@@ -20,6 +20,11 @@ spec:
           image: node-app
           imagePullPolicy: Always
           env:
+            - name: MONGODB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secrets
+                  key: swim-user-pass
             - name: MONGODB_URL
               value: mongodb://$(MONGODB_USER):$(MONGODB_PASS)@mongodb.swimlane.svc.cluster.local:27017/$(MONGODB_DB)
           envFrom:
