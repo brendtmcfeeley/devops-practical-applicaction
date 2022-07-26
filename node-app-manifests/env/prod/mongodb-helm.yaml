@@ -1,0 +1,9 @@
+apiVersion: builtin
+kind: HelmChartInflationGenerator
+metadata:
+  name: mongodb
+chartName: bitnami/mongodb
+chartRepoUrl: https://charts.bitnami.com/bitnami
+chartVersion: 5.0.9
+releaseName: mongodb-release
+releaseNamespace: swimlane

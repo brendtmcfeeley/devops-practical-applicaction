@@ -5,10 +5,17 @@ namespace: swimlane
 
 resources:
   - ../../base/
+
+# We would love to use kustomize helm generator, but there still an open bug with OCI
+# https://github.com/kubernetes-sigs/kustomize/issues/4381
+# But we'll leave this here and stay with the manual route
+# generators:
+#   - mongodb-helm.yaml
+
+patchesStrategicMerge:
   - patches/node-app-patch.yaml
-  - patches/mongodb-env.yaml
 
 images:
 - name: node-app
   newName: bentomcfeeley/swim-node
-  newTag: "prod-tag"
+  newTag: "test-tag"
