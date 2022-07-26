@@ -4,6 +4,6 @@ kind: Kustomization
 namespace: swimlane
 
 resources:
-  - mongo-config.yaml
+  - mongodb-config.yaml
   - mongodb-swim-user.yaml
   - mongo-init.yaml

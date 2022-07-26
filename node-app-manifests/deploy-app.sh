@@ -23,7 +23,7 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm install mongodb bitnami/mongodb -n swimlane
 
 # Setup non-admin non-root db and user
-k apply -k base/mongo-init
+kubectl apply -k base/mongo-init
 
 # Install app onto k8s
 kubectl apply -k env/${ENV}

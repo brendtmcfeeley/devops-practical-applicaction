@@ -5,7 +5,6 @@ namespace: swimlane
 
 resources:
   - ../../base/
-  - config/mongodb-env.yaml
 
 # We would love to use kustomize helm generator, but there still an open bug with OCI
 # https://github.com/kubernetes-sigs/kustomize/issues/4381
