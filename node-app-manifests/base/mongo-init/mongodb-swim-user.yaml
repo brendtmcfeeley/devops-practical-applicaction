@@ -1,4 +1,4 @@
-# Normally this would be sitting here in base64
+# Normally this would not be sitting here in base64
 # We would use something like SOPS to encrypt this file and connect 
 # via AWS to decrypt the secrets in cluster only.
 
