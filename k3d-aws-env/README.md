@@ -87,7 +87,7 @@ direnv allow
 
 # Packer
 
-If you want to build the k3d AMI image, follow the README in the `packer` directory
+To build the k3d AMI image, follow the README in the `packer` directory
 
 **You will need to build the k3d image via packer if you want to deploy via AWS**
 
